@@ -19,7 +19,6 @@ for _ in range(m):
 
 def diks(start):
     q=[]
-    print(distance)
     heapq.heappush(q,(0,start)) #cost
     distance[start]=0
     while q:
@@ -33,8 +32,26 @@ def diks(start):
                   heapq.heappush(q,(costed,n))
     return distance
 
-dis=diks(2)
-print(dis)
-# for i in range(1,n+1):
-#     dis=diks(i)
-#     print(dis[2])
+dis=diks(j)
+
+# if min(dis)==INF:
+#     print(-1)
+#     exit()
+adist=bdist=INF
+for i in range(1,n+1):
+    if i in ahouse :
+        if adist > dis[i]:
+            adist = dis[i]
+    elif i in bhouse :
+        if bdist > dis[i]:
+            bdist = dis[i]
+
+if adist == INF and bdist == INF :
+    print(-1)
+else :
+    if adist <= bdist :
+        print('A')
+        print(adist)
+    else :
+        print('B')
+        print(bdist)
