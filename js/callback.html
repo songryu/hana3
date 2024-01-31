@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <button id="button">
+            BTN
+        </button>
+        <script>
+            var id=9; //글로벌오브젝트이면 9 찍음, 윈도우를 가리키고있음
+            window.addEventListener('load', (event) => {
+  document.getElementById('button').addEventListener('click', (event) => {
+    console.log(event.target);
+    console.log(event.currentTarget,this.id); // (가)버튼의 부모는 윈도우
+  });
+
+  for (let i = 0; i < 5; i += 1) {      // ⇒ ⇒ ⇒
+    setTimeout(() => console.log(i), 1000); // (나)
+  }
+//전역 글로벌 env record에서 실행되는데 
+  console.log('The End'); // (다)
+});
+
+        </script>
+    </body>
+</html>

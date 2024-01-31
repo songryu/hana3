@@ -139,4 +139,85 @@ bfn.bind({y:999})(7);
   
 
 
-  
+  //<고차함수>
+  // const f1 = function(f,val){
+  //  return f(val);
+//}
+const f10 = (f, val) => f(val);
+f10(console.log, 'f100');
+
+// const f2 = function(f){
+//   return function(...args) {
+//             console.log(f…)
+//         };
+// }   // Curring
+const f2 = (f) => (...args) => 
+console.log("f.name",f.name,"fargs", f(...args));
+f2(Math.max)(1, 3, 2, 5, 4);
+
+const X = f2(Math.max);
+X(1, 3, 2, 10, 4); //args로 들어감
+
+
+const ff = f10; //같은 힙의 주소를 보고 있음
+const fns = [f10, f2];
+
+
+//unary 함수 
+const arr = ['1', '2', '3'];
+//map(function(item,idx)){})
+//function parseInt(str)==>number
+const rets = arr.map(parseInt);
+console.log(rets);   // [ 1, NaN, NaN ]
+//arr.map(function(item,idx,this))
+//parseInt('1',0,[1,2,3])
+//parseInt('2',1,[1,2,3])
+//parseInt('3',2,[1,2,3])
+
+/*new 안해도 메모리에 잡힘. 정적변수
+class Dog(){
+    static x=10;
+    names='d';
+}
+Dog.X
+*/
+
+const unary = fn => fn.length === 1
+   ? fn
+   : (arg) => fn(arg);
+
+const rets2 = arr.map(unary(parseInt));
+console.log(rets2);   // [ 1, 2, 3 ]
+
+
+const cb=item=>parseInt(item);
+
+const unaryCb=unary(cb);
+const unaryParseInt=unary(parseInt);
+console.log(arr.map(unaryCb));
+console.log(arr.map(unaryParseInt));
+
+
+//함수를 한번만 실행하게 하는 once 함수를 작성하시오.
+
+function once(f){
+    //@Todo call once  
+    let didRun = false;
+    return function(...args){
+        return f.apply(this,args);
+        //f.bind(thisValue)(...args);
+        //f.apply(thisValue,args);
+    };
+}
+const thisObj1={id:100};
+const thisObj2 = { id: 200 };
+function fff(x,y){
+    console.log(`금일 운행금지 차량은 끝번호 ${x},${y}입니다! ${this.id}`);
+}
+const fn=once(fff);
+//binding => fn 한테 전달 
+console.log(fff.call(thisObj1,1,6));
+console.log(fn.call(thisObj2, 2, 7)); // 금일 운행금지 차량은 끝번호 1, 6입니다!
+console.log(fn(1, 6)); // 금일 운행금지 차량은 끝번호 1, 6입니다!
+console.log(fn(2, 7)); // undefined
+console.log(fn(3, 8)); // undefined

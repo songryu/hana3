@@ -1,57 +1,43 @@
 import sys
-import heapq
+from collections import deque
 input=sys.stdin.readline
+#위상정렬 (순환하지 않는 방향 그래프
+# 큐에서 노드 1을 꺼낸 뒤에 노드 1에서 나가는 간선을 제거함 
+
 
 n,m=map(int,input().split())
-j=int(input())
-k=int(input())
-INF=int(1e9)
-distance=[INF]*(n+1)
-ahouse=list(map(int,input().split()))
-bhouse=list(map(int,input().split()))
-            
-graph=[[] for _ in range(n+1)]
+#각 노드에 연결된 간선 정보 연결리스트 
+degree=[[] for _ in range(n+1)]
+#모든 노드에 대한 진입차수 0으로 초기화
+num=[0 for _ in range(n+1)]
 
 for _ in range(m):
-    x,y,z=map(int,input().split())
-    graph[x].append((z,y))
-    graph[y].append((z,x))
+    a,b=map(int,input().split())
+    degree[a].append(b)
+    num[b]+=1#진입차수 1증가
+print(degree)
+#1 3
+#2 3
 
-def diks(start):
-    q=[]
-    heapq.heappush(q,(0,start)) #cost
-    distance[start]=0
+#위상정렬함수
+def toplogy():
+    result=[]
+    q=deque()
+    #처음 시작할때는 진입차수가 0 인 노드를 큐에 삽입
+    for i in range(1,n+1):
+        if num[i]==0:
+            q.append(i)
+    print(q) #1,2
+    #큐가 빌때까지 반복
     while q:
-        dist,node=heapq.heappop(q)
-        if distance[node]<dist:
-                continue
-        for cost,n in graph[node]:
-             costed=dist+cost
-             if costed<distance[n]:
-                  distance[n]=costed
-                  heapq.heappush(q,(costed,n))
-    return distance
-
-dis=diks(j)
-
-# if min(dis)==INF:
-#     print(-1)
-#     exit()
-adist=bdist=INF
-for i in range(1,n+1):
-    if i in ahouse :
-        if adist > dis[i]:
-            adist = dis[i]
-    elif i in bhouse :
-        if bdist > dis[i]:
-            bdist = dis[i]
-
-if adist == INF and bdist == INF :
-    print(-1)
-else :
-    if adist <= bdist :
-        print('A')
-        print(adist)
-    else :
-        print('B')
-        print(bdist)
+        now=q.popleft()
+        print("now",now)
+        result.append(now) #1
+        for i in degree[now]: #1
+            print("I",i)#3
+            num[i]-=1
+            if num[i]==0:
+                q.append(i)
+    
+    print(*result)
+toplogy()

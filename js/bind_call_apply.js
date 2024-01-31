@@ -8,3 +8,4 @@ bf(3,'song');
 
 //array 의 a
 //call은 하나씩 따로줌
+
