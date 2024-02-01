@@ -1,43 +1,24 @@
 import sys
-from collections import deque
 input=sys.stdin.readline
 #위상정렬 (순환하지 않는 방향 그래프
 # 큐에서 노드 1을 꺼낸 뒤에 노드 1에서 나가는 간선을 제거함 
+t=int(input())
 
+for _ in range(t):
+    T=int(input())
+    final=[]
+    listed=list(map(int,input().split()))
+    ll=len(listed)
+    dp=[i for i in range(1,T+1)]
+    try:
+        for i in range(ll-1,-1,-1):
+            print(listed[i],dp[listed[i]])
+            dp.pop(listed[i])
+            final.append(dp[listed[i]])
+            #9 ->dp 숫자중 그 숫자보다 작은게 9개 있음 , 
+            #1~9까지가 뒤에 있고 나머지 숫자 dp[9]
+        print("final",final)
+    except IndexError:
+        print("IMPOSSIBLE")
+            
 
-n,m=map(int,input().split())
-#각 노드에 연결된 간선 정보 연결리스트 
-degree=[[] for _ in range(n+1)]
-#모든 노드에 대한 진입차수 0으로 초기화
-num=[0 for _ in range(n+1)]
-
-for _ in range(m):
-    a,b=map(int,input().split())
-    degree[a].append(b)
-    num[b]+=1#진입차수 1증가
-print(degree)
-#1 3
-#2 3
-
-#위상정렬함수
-def toplogy():
-    result=[]
-    q=deque()
-    #처음 시작할때는 진입차수가 0 인 노드를 큐에 삽입
-    for i in range(1,n+1):
-        if num[i]==0:
-            q.append(i)
-    print(q) #1,2
-    #큐가 빌때까지 반복
-    while q:
-        now=q.popleft()
-        print("now",now)
-        result.append(now) #1
-        for i in degree[now]: #1
-            print("I",i)#3
-            num[i]-=1
-            if num[i]==0:
-                q.append(i)
-    
-    print(*result)
-toplogy()

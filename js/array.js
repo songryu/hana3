@@ -107,8 +107,8 @@ const a99 = [1, 2, a78];
 console.log(a99);//[ 1, 2, [ 7, 8 ] ]
 a78[1] = 9;
 console.log(a99);//[ 1, 2, [ 7, 9 ] ]
-const arr2 = arr.concat([4, 5]);
-console.log(arr2);
+// const arr2 = arr.concat([4, 5]);
+// console.log(arr2);
 const arr3 = arr.concat(4, 5);
 const arr4 = arr.concat(arr2);
 const arr5 = [...arr, ...arr3];
@@ -171,3 +171,105 @@ console.log("복원",arr22);
 arr22.splice(2, 1,'X', 'Y', 'Z');
 console.log(arr22);
 
+
+//배열 평탄화
+console.log([1, 2, [3]].flat()); // [1, 2, 3]
+[1, [2, [3]]].flat(); // [1, 2, [3]]
+[1, [2, [3]]].flat(2); // [1, 2, 3]
+[1, [2, [3, [4]]]].flat(2); // [1, 2, 3, [4]]
+[1, [2, [3, [4]]]].flat(Infinity); // [1, 2, 3, 4]  무조건 1차원 배열 만들기!
+
+console.log(arr);
+const sum1 = arr.reduce( (s, a) => s += a, 0 );
+console.log(sum1);
+const sum2 = arr.reduce( (s, a) => s += a );
+console.log(sum2);
+const sum3 = arr.reduce( (s, a) => s + a );
+console.log(sum3);
+
+const users = [{ id: 1, name: 'Hong' }, { id: 20, name: 'Kim' }, { id: 3, name: 'Lee' } ];
+const users1=users.reduce( (s, user) => `${s} ${user.name}`,  '');
+console.log(users1);
+
+const objs2 = [ {id: 1}, {name: 'Hong'}, {addr: 'Seoul', id: 5}];
+const sum4 = objs2.reduce( (acc,item) =>({...acc,...item}),{} );
+console.log(sum4);
+
+
+//exam
+const assert = require('assert');
+
+// ex1)
+const hong = { id: 1, name: 'Hong' };
+const choi = { id: 5, name: 'Choi' };
+const kim = { id: 2, name: 'kim' };
+const lee = { id: 3, name: 'Lee' };
+const park = { id: 4, name: 'Park' };
+const userss = [kim, lee, park]; // 오염되면 안됨!!
+
+// const addUser = user => users.push(user);
+const addUser = user => [...users, user];
+const removeUser = user => users.filter(_user => user.id !== _user.id);
+const changeUser = (oldUser, newUser) =>
+  users.map(_user => (_user.id === oldUser.id ? newUser : _user));
+
+console.log('add>>', addUser(hong)); // [kim, lee, park, hong]
+console.log('remove>>', removeUser(lee)); // [kim, park]
+console.log('change>>', changeUser(kim, choi)); // [choi, lee, park]
+
+console.log('----------------------------------');
+// ex2-1)
+const arr2 = [1, 2, 3, true];
+const ret1 = arr2.map(item => item.toString());
+console.log('🚀  ret1:', ret1);
+assert.deepStrictEqual(ret1, ['1', '2', '3', 'true']);
+
+// ex2-2)
+const classNamesV1 = (...args) =>
+  args.reduce(
+    (acc, item) =>
+      //  `${acc}${acc && item ? ' ' : ''}${item}`, '');
+      `${acc}${acc && item && ' '}${item}`,
+    ''
+  );
+const classNames = (...args) =>
+  args.reduce(
+    (acc, item) =>
+      `${acc}${acc && item && item.trim() && ' '}${
+        item && item.trim() && item
+      }`,
+    ''
+  );
+const ret2 = classNames('', 'a b c', 'd', '   ', 'e');
+console.log('🚀  ret2:', ret2);
+assert.strictEqual(ret2, 'a b c d e');
+
+// ex3)
+const arr6 = [1, 2, 3, 4, 5];
+const square = n => n ** 2;
+const cube = n => n ** 3;
+// [1, 4, 9 ....],map
+// [1, 2, 3, ....].map
+// [1, 8, 27, ...]
+const ret3_1 = arr6
+  .map(square)
+  .map(Math.sqrt) // (a) => fn(a)
+  .map(cube);
+console.log('🚀  ret3_1:', ret3_1);
+assert.deepStrictEqual(ret3_1, [1, 8, 27, 64, 125]);
+
+// square(2) ==> Math.sqrt(4) ==> cube(2)
+const ret3_2 = [square, Math.sqrt, cube].reduce((acc, f) => f(acc), 2);
+
+const bp1 = n => [square, Math.sqrt, cube].reduce((acc, f) => f(acc), n);
+console.log('🚀  ret3_2:', ret3_2, bp1(2));
+
+// const ret3_3 = arr.map(a => bp1(a));
+const ret3_3 = arr.map(bp1);
+console.log('🚀  ret3_3:', ret3_3);
+assert.deepStrictEqual(ret3_3, [1, 8, 27, 64, 125]);
+
+const bpm = (fns, n) => fns.reduce((acc, f) => f(acc), n);
+
+const ret3_4 = bpm([square, Math.sqrt, cube], 2);
+console.log('🚀  ret3_4:', ret3_4);
