@@ -250,3 +250,51 @@ class Queue{
 const queue = new Queue();
 queue.enqueue(3); // 추가하기
 console.log(queue.dequeue()); // 추가한지 가장 오래된 - 먼저 들어간 - 하나 꺼내기
+
+
+// ** iterable class **
+function* gener() {
+    const x = yield 1;
+    const y = yield (x + 10);
+    console.log('x y =', x, y);
+    return x + y;
+  }
+  const it3 = gener();
+  console.log(it3.next()); // { value: 1, done: false }
+  console.log(it3.next());// { value: 13, done: false }
+  
+  console.log(it3.next(5)); 
+  // x y = 13 5
+  // { value: 18, done: true }
+
+
+
+
+//   Array →→ List
+const arrs = [1, 2, 3];
+// 방법1) 역방향
+let node2;
+for (let i = arrs.length - 1; i >= 0; i -= 1) {
+    console.log(i);//210
+  node2 = { value: arr[i], rest: node2 };
+  console.log(node2);
+}
+
+// 방법2) 순방향
+let list;
+let preNode;
+for (let i = 0; i < arrs.length; i++) {
+    console.log(i);//012
+  const node = { value: arrs[i], rest: undefined };
+  if (!list) {
+    console.log(node,"list아님");
+    list = node; 
+  } else {
+    console.log(node,"list임");
+    preNode.rest = node;
+    console.log("preNode.rest:",preNode.rest);
+  }
+
+  preNode = node;
+  console.log("preNode",preNode);//012
+}
