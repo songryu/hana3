@@ -87,9 +87,9 @@ const depthTime=depth=>new Promise((resolve,reject)=>
         },depth*1000)
     });
 try{
-    const r1=await depthTime(1);
-    const r2=await depthTime(2);
-    const r3=await depthTime(3);
+    const r1=depthTime(1);
+    const r2= depthTime(2);
+    const r3= depthTime(3);
 }catch(err){
 console.error(err);
 }
@@ -99,3 +99,14 @@ depthTime(1).then(console.log);
 
 
   console.log('START!', new Date());
+
+
+  const examurl = 'https://jsonplaceholder.typicode.com/posts?userId=1';
+  const myFetch = url => fetch(url).then(res => res.json());
+
+// // myFetch를 이용하는 코드
+myFetch(examurl).then(userId => {
+    console.log('userId>>>', userId);
+    const arr =userId;
+});
+console.log(arr[0])
